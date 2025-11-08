@@ -30,8 +30,7 @@ public:
 
     ArrayPtr& operator=(ArrayPtr&& other) noexcept {
         if (this != &other) {
-            delete[] ptr_;
-            ptr_ = std::exchange(other.ptr_, nullptr);
+            swap(other);
         }
         return *this;
     }
@@ -67,9 +66,7 @@ public:
     }
 
     T* Release() noexcept {
-        T* tmp = ptr_;
-        ptr_ = nullptr;
-        return tmp;
+        return std::exchange(ptr_, nullptr);
     }
 
     void swap(ArrayPtr& other) noexcept {
