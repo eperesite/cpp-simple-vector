@@ -69,16 +69,22 @@ public:
 
     SimpleVector& operator=(const SimpleVector& other) {
         if (&other != this) {
-            SimpleVector other_copy(other);
-            swap(other_copy);
+            if (other.IsEmpty()) {
+                Clear();
+                capacity_ = 0;
+                items_ = ArrayPtr<Type>();
+            } else {
+                SimpleVector other_copy(other);
+                swap(other_copy);
+            }
         }
         return *this;
     }
 
     SimpleVector& operator=(SimpleVector&& other) {
-        items_ = std::move(other.items_);
-        size_ = std::exchange(other.size_, 0);
-        capacity_ = std::exchange(other.capacity_, 0);
+        if (this != &other) {
+            swap(other);
+        }
         return *this;
     }
 
